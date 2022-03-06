@@ -1,0 +1,570 @@
+version: "3.6"
+
+volumes:
+  keys:
+
+services:
+  validator-0:
+    hostname: validator-0
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+      - ./scripts/main_validator.sh:/root/start.sh
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    working_dir: /root
+    entrypoint: ["bash", "start.sh"]
+    stop_signal: SIGKILL
+
+  validator-1:
+    hostname: validator-1
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+        while true; do if [ -e /shared_keys/validator-1.pub ]; then mv /shared_keys/validator-1.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-1.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+        echo $$(cat /etc/sawtooth/keys/validator.pub); \
+        sawtooth-validator -vvv  \
+            --endpoint tcp://validator-1:8800 \
+            --bind component:tcp://eth0:4004 \
+            --bind network:tcp://eth0:8800 \
+            --bind consensus:tcp://eth0:5050 \
+            --peering static \
+            --peers tcp://validator-0:8800
+            --scheduler parallel \
+            --maximum-peer-connectivity 10 \
+    \""
+    stop_signal: SIGKILL
+
+  validator-2:
+    hostname: validator-2
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+        while true; do if [ -e /shared_keys/validator-2.pub ]; then mv /shared_keys/validator-2.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-2.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+        echo $$(cat /etc/sawtooth/keys/validator.pub); \
+        sawtooth-validator -vvv  \
+            --endpoint tcp://validator-2:8800 \
+            --bind component:tcp://eth0:4004 \
+            --bind network:tcp://eth0:8800 \
+            --bind consensus:tcp://eth0:5050 \
+            --peering static \
+            --peers tcp://validator-0:8800,tcp://validator-1:8800
+            --scheduler parallel \
+            --maximum-peer-connectivity 10 \
+    \""
+    stop_signal: SIGKILL
+
+  validator-3:
+    hostname: validator-3
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+        while true; do if [ -e /shared_keys/validator-3.pub ]; then mv /shared_keys/validator-3.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-3.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+        echo $$(cat /etc/sawtooth/keys/validator.pub); \
+        sawtooth-validator -vvv \
+            --endpoint tcp://validator-3:8800 \
+            --bind component:tcp://eth0:4004 \
+            --bind network:tcp://eth0:8800 \
+            --bind consensus:tcp://eth0:5050 \
+            --peering static \
+            --peers tcp://validator-0:8800,tcp://validator-1:8800,tcp://validator-2:8800
+            --scheduler parallel \
+            --maximum-peer-connectivity 10 \
+    \""
+    stop_signal: SIGKILL
+
+  validator-4:
+    hostname: validator-4
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+          while true; do if [ -e /shared_keys/validator-4.pub ]; then mv /shared_keys/validator-4.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-4.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+          echo $$(cat /etc/sawtooth/keys/validator.pub); \
+          sawtooth-validator -vvv \
+              --endpoint tcp://validator-4:8800 \
+              --bind component:tcp://eth0:4004 \
+              --bind network:tcp://eth0:8800 \
+              --bind consensus:tcp://eth0:5050 \
+              --peering static \
+              --peers tcp://validator-0:8800,tcp://validator-1:8800,tcp://validator-2:8800,tcp://validator-3:8800
+              --scheduler parallel \
+              --maximum-peer-connectivity 10 \
+      \""
+    stop_signal: SIGKILL
+
+  validator-5:
+    hostname: validator-5
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+            while true; do if [ -e /shared_keys/validator-5.pub ]; then mv /shared_keys/validator-5.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-5.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+            echo $$(cat /etc/sawtooth/keys/validator.pub); \
+            sawtooth-validator -vvv \
+                --endpoint tcp://validator-5:8800 \
+                --bind component:tcp://eth0:4004 \
+                --bind network:tcp://eth0:8800 \
+                --bind consensus:tcp://eth0:5050 \
+                --peering static \
+                --peers tcp://validator-0:8800,tcp://validator-1:8800,tcp://validator-2:8800,tcp://validator-3:8800,tcp://validator-4:8800
+                --scheduler parallel \
+                --maximum-peer-connectivity 10 \
+        \""
+    stop_signal: SIGKILL
+
+  validator-6:
+    hostname: validator-6
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+              while true; do if [ -e /shared_keys/validator-6.pub ]; then mv /shared_keys/validator-6.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-6.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+              echo $$(cat /etc/sawtooth/keys/validator.pub); \
+              sawtooth-validator -vvv \
+                  --endpoint tcp://validator-6:8800 \
+                  --bind component:tcp://eth0:4004 \
+                  --bind network:tcp://eth0:8800 \
+                  --bind consensus:tcp://eth0:5050 \
+                  --peering static \
+                  --peers tcp://validator-0:8800,tcp://validator-1:8800,tcp://validator-2:8800,tcp://validator-3:8800,tcp://validator-4:8800,tcp://validator-5:8800
+                  --scheduler parallel \
+                  --maximum-peer-connectivity 10 \
+          \""
+    stop_signal: SIGKILL
+
+  validator-7:
+    hostname: validator-7
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+                while true; do if [ -e /shared_keys/validator-7.pub ]; then mv /shared_keys/validator-7.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-7.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+                echo $$(cat /etc/sawtooth/keys/validator.pub); \
+                sawtooth-validator -vvv \
+                    --endpoint tcp://validator-7:8800 \
+                    --bind component:tcp://eth0:4004 \
+                    --bind network:tcp://eth0:8800 \
+                    --bind consensus:tcp://eth0:5050 \
+                    --peering static \
+                    --peers tcp://validator-0:8800,tcp://validator-1:8800,tcp://validator-2:8800,tcp://validator-3:8800,tcp://validator-4:8800,tcp://validator-5:8800,tcp://validator-6:8800
+                    --scheduler parallel \
+                    --maximum-peer-connectivity 10 \
+            \""
+    stop_signal: SIGKILL
+
+  validator-8:
+    hostname: validator-8
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+                  while true; do if [ -e /shared_keys/validator-8.pub ]; then mv /shared_keys/validator-8.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-8.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+                  echo $$(cat /etc/sawtooth/keys/validator.pub); \
+                  sawtooth-validator -vvv \
+                      --endpoint tcp://validator-8:8800 \
+                      --bind component:tcp://eth0:4004 \
+                      --bind network:tcp://eth0:8800 \
+                      --bind consensus:tcp://eth0:5050 \
+                      --peering static \
+                      --peers tcp://validator-0:8800,tcp://validator-1:8800,tcp://validator-2:8800,tcp://validator-3:8800,tcp://validator-4:8800,tcp://validator-5:8800,tcp://validator-6:8800,tcp://validator-7:8800
+                      --scheduler parallel \
+                      --maximum-peer-connectivity 10 \
+              \""
+    stop_signal: SIGKILL
+
+  validator-9:
+    hostname: validator-9
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+                    while true; do if [ -e /shared_keys/validator-9.pub ]; then mv /shared_keys/validator-9.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-9.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+                    echo $$(cat /etc/sawtooth/keys/validator.pub); \
+                    sawtooth-validator -vvv \
+                        --endpoint tcp://validator-9:8800 \
+                        --bind component:tcp://eth0:4004 \
+                        --bind network:tcp://eth0:8800 \
+                        --bind consensus:tcp://eth0:5050 \
+                        --peering static \
+                        --peers tcp://validator-0:8800,tcp://validator-1:8800,tcp://validator-2:8800,tcp://validator-3:8800,tcp://validator-4:8800,tcp://validator-5:8800,tcp://validator-6:8800,tcp://validator-7:8800,tcp://validator-8:8800
+                        --scheduler parallel \
+                        --maximum-peer-connectivity 10 \
+                \""
+    stop_signal: SIGKILL
+
+  validator-10:
+    hostname: validator-10
+    image: hyperledger/sawtooth-validator:chime
+    volumes:
+      - keys:/shared_keys
+    expose:
+      - 4004
+      - 8800
+      - 5005
+      - 5050
+    command: "bash -c \"\
+                      while true; do if [ -e /shared_keys/validator-10.pub ]; then mv /shared_keys/validator-10.priv /etc/sawtooth/keys/validator.priv && mv /shared_keys/validator-10.pub /etc/sawtooth/keys/validator.pub; break; fi; sleep 0.5; done; \
+                      echo $$(cat /etc/sawtooth/keys/validator.pub); \
+                      sawtooth-validator -vvv \
+                          --endpoint tcp://validator-10:8800 \
+                          --bind component:tcp://eth0:4004 \
+                          --bind network:tcp://eth0:8800 \
+                          --bind consensus:tcp://eth0:5050 \
+                          --peering static \
+                          --peers tcp://validator-0:8800,tcp://validator-1:8800,tcp://validator-2:8800,tcp://validator-3:8800,tcp://validator-4:8800,tcp://validator-5:8800,tcp://validator-6:8800,tcp://validator-7:8800,tcp://validator-8:8800,tcp://validator-10:8800
+                          --scheduler parallel \
+                          --maximum-peer-connectivity 10 \
+                  \""
+    stop_signal: SIGKILL
+
+  custom-consensus-0:
+    hostname: custom-consensus-0
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "bash -c \"\
+     python3 main.py -vv --connect tcp://validator-0:5050
+   \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-0
+
+  custom-consensus-1:
+    hostname: custom-consensus-1
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+        python3 main.py -vv --connect tcp://validator-1:5050
+      \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-1
+
+  custom-consensus-2:
+    hostname: custom-consensus-2
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+        python3 main.py -vv --connect tcp://validator-2:5050
+      \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-2
+
+  custom-consensus-3:
+    hostname: custom-consensus-3
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+        python3 main.py -vv --connect tcp://validator-3:5050
+      \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-3
+
+  custom-consensus-4:
+    hostname: custom-consensus-4
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+          python3 main.py -vv --connect tcp://validator-4:5050
+        \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-4
+
+  custom-consensus-5:
+    hostname: custom-consensus-5
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+            python3 main.py -vv --connect tcp://validator-5:5050
+          \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-5
+
+  custom-consensus-6:
+    hostname: custom-consensus-6
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+            python3 main.py -vv --connect tcp://validator-6:5050
+          \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-6
+
+  custom-consensus-7:
+    hostname: custom-consensus-7
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+            python3 main.py -vv --connect tcp://validator-7:5050
+          \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-7
+
+  custom-consensus-8:
+    hostname: custom-consensus-8
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+            python3 main.py -vv --connect tcp://validator-8:5050
+          \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-8
+
+  custom-consensus-9:
+    hostname: custom-consensus-9
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+            python3 main.py -vv --connect tcp://validator-9:5050
+          \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-9
+
+  custom-consensus-10:
+    hostname: custom-consensus-10
+    image: sintef/sawtooth-custom-consensus-engine:latest
+    command: "bash -c \"\
+            python3 main.py -vv --connect tcp://validator-10:5050
+          \""
+    stop_signal: SIGKILL
+    depends_on:
+      - validator-10
+
+  rest-api-0:
+    hostname: rest-api-0
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-0:4004 --bind rest-api-0:8008
+    stop_signal: SIGKILL
+
+  rest-api-1:
+    hostname: rest-api-1
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-1:4004 --bind rest-api-1:8008
+    stop_signal: SIGKILL
+
+  rest-api-2:
+    hostname: rest-api-2
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-2:4004 --bind rest-api-2:8008
+    stop_signal: SIGKILL
+
+  rest-api-3:
+    hostname: rest-api-3
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-3:4004 --bind rest-api-3:8008
+    stop_signal: SIGKILL
+
+  rest-api-4:
+    hostname: rest-api-4
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-4:4004 --bind rest-api-4:8008
+    stop_signal: SIGKILL
+
+  rest-api-5:
+    hostname: rest-api-5
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-5:4004 --bind rest-api-5:8008
+    stop_signal: SIGKILL
+
+  rest-api-6:
+    hostname: rest-api-6
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-6:4004 --bind rest-api-6:8008
+    stop_signal: SIGKILL
+
+  rest-api-7:
+    hostname: rest-api-7
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-7:4004 --bind rest-api-7:8008
+    stop_signal: SIGKILL
+
+  rest-api-8:
+    hostname: rest-api-8
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-8:4004 --bind rest-api-8:8008
+    stop_signal: SIGKILL
+
+  rest-api-9:
+    hostname: rest-api-9
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-9:4004 --bind rest-api-9:8008
+    stop_signal: SIGKILL
+
+  rest-api-10:
+    hostname: rest-api-10
+    image: hyperledger/sawtooth-rest-api:chime
+    expose:
+      - 4004
+      - 8008
+    command: sawtooth-rest-api --connect tcp://validator-10:4004 --bind rest-api-10:8008
+    stop_signal: SIGKILL
+
+  settings-tp-0:
+    hostname: settings-tp-0
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-0:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-1:
+    hostname: settings-tp-1
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-1:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-2:
+    hostname: settings-tp-2
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-2:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-3:
+    hostname: settings-tp-3
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-3:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-4:
+    hostname: settings-tp-4
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-4:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-5:
+    hostname: settings-tp-5
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-5:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-6:
+    hostname: settings-tp-6
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-6:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-7:
+    hostname: settings-tp-7
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-7:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-8:
+    hostname: settings-tp-8
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-8:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-9:
+    hostname: settings-tp-9
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-9:4004 -vv
+    stop_signal: SIGKILL
+
+  settings-tp-10:
+    hostname: settings-tp-10
+    image: hyperledger/sawtooth-settings-tp:chime
+    expose:
+      - 4004
+    command: settings-tp -C tcp://validator-10:4004 -vv
+    stop_signal: SIGKILL
