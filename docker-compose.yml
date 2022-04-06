@@ -271,7 +271,6 @@ services:
 
   custom-consensus-0:
     hostname: custom-consensus-0
-    image: sintef/sawtooth-custom-consensus-engine:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -284,7 +283,9 @@ services:
 
   custom-consensus-1:
     hostname: custom-consensus-1
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
         python3 main.py -vv --connect tcp://validator-1:5050
       \""
@@ -294,7 +295,9 @@ services:
 
   custom-consensus-2:
     hostname: custom-consensus-2
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
         python3 main.py -vv --connect tcp://validator-2:5050
       \""
@@ -304,7 +307,9 @@ services:
 
   custom-consensus-3:
     hostname: custom-consensus-3
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
         python3 main.py -vv --connect tcp://validator-3:5050
       \""
@@ -314,7 +319,9 @@ services:
 
   custom-consensus-4:
     hostname: custom-consensus-4
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
           python3 main.py -vv --connect tcp://validator-4:5050
         \""
@@ -324,7 +331,9 @@ services:
 
   custom-consensus-5:
     hostname: custom-consensus-5
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
             python3 main.py -vv --connect tcp://validator-5:5050
           \""
@@ -334,7 +343,9 @@ services:
 
   custom-consensus-6:
     hostname: custom-consensus-6
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
             python3 main.py -vv --connect tcp://validator-6:5050
           \""
@@ -344,7 +355,9 @@ services:
 
   custom-consensus-7:
     hostname: custom-consensus-7
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
             python3 main.py -vv --connect tcp://validator-7:5050
           \""
@@ -354,7 +367,9 @@ services:
 
   custom-consensus-8:
     hostname: custom-consensus-8
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
             python3 main.py -vv --connect tcp://validator-8:5050
           \""
@@ -364,7 +379,9 @@ services:
 
   custom-consensus-9:
     hostname: custom-consensus-9
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
             python3 main.py -vv --connect tcp://validator-9:5050
           \""
@@ -374,7 +391,9 @@ services:
 
   custom-consensus-10:
     hostname: custom-consensus-10
-    image: sintef/sawtooth-custom-consensus-engine:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: "bash -c \"\
             python3 main.py -vv --connect tcp://validator-10:5050
           \""
